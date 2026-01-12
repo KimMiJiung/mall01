@@ -1,0 +1,142 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>도서등록</title>
+	<th:block th:replace="~{/module/link.html}"></th:block>	
+</head>
+<body>
+<div class="container py-4">
+	<!-- 헤더 -->
+	<th:block th:replace="~{/module/top.html}"></th:block>
+	<!-- 본문 상단 -->
+	<div class="p-5 mb-4 bg-info-subtle rounded-3">
+		<div class="container-fluid py-5">
+			<h1 class="display-5 fw-bold">[[#{addBook.form.maintitle.label}]]</h1>
+			<p class="col-md-8">BookMarket</p>
+		</div>
+	</div>
+	<!-- 본문 내용 -->
+	<div class="row align-items-md-stretch">
+		<!-- 다국어 처리 -->
+		<div class="text-end">
+			<a href="?lang=ko" class="a-lang">KOREAN</a> |
+			<a href="?lang=en" class="a-lang">ENGLISH</a>
+		</div>
+		<form th:object="${book}" th:action="@{/books/admin/add}" method="post" enctype="multipart/form-data">
+			<legend class="mb-4">[[#{addBook.form.subtitle.label}]]</legend>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.bookId.label}]]</label>
+				<div class="col-sm-4">
+					<input type="text" name="bookId" class="form-control" th:field="*{bookId}">
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{bookId}"></p>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.title.label}]]</label>
+				<div class="col-sm-4">
+					<input type="text" name="title" class="form-control"  th:field="*{title}">
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{title}"></p>
+				</div>				
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.price.label}]]</label>
+				<div class="col-sm-4">
+					<input type="number" name="price" class="form-control" th:field="*{price}">
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{price}"></p>
+				</div>				
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.author.label}]]</label>
+				<div class="col-sm-4">
+					<input type="text" name="author" class="form-control" th:field="*{author}">
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{author}"></p>
+				</div>				
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.description.label}]]</label>
+				<div class="col-sm-6">
+					<textarea name="description" cols="100" rows="5" class="form-control" th:field="*{description}"></textarea>
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{description}"></p>
+				</div>				
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.publisher.label}]]</label>
+				<div class="col-sm-4">
+					<input type="text" name="publisher" class="form-control" th:field="*{publisher}">
+					<div class="col-sm-4">
+						<p class="text-danger" th:errors="*{publisher}"></p>
+					</div>						
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.category.label}]]</label>
+				<div class="col-sm-4">
+					<select name="category" class="form-control">
+						<option selected>컴퓨터/IT</option>
+						<option>소설</option>
+						<option>시/에세이</option>
+						<option>시/에세이</option>
+						<option>인문</option>
+						<option>가정/육아</option>
+						<option>요리</option>
+						<option>건강</option>
+						<option>취미/스포츠</option>
+						<option>경제/경영</option>
+						<option>자기계발</option>						
+					</select>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.stock.label}]]</label>
+				<div class="col-sm-4">
+					<input type="number" name="stock" class="form-control" th:field="*{stock}">
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{stock}"></p>
+				</div>				
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.releaseDate.label}]]</label>
+				<div class="col-sm-4">
+					<input type="date" name="releaseDate" class="form-control" th:field="*{releaseDate}">
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{releaseDate}"></p>
+				</div>				
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.condition.label}]]</label>
+				<div class="col-sm-4">
+					<input type="radio" name="bookCondition" value="신규" checked id="c1"> <label for="c1">[[#{addBook.form.condition.new.label}]]</label>
+					<input type="radio" name="bookCondition" value="중고" class="ms-3" id="c2"><label for="c2">[[#{addBook.form.condition.old.label}]]</label> 
+					<input type="radio" name="bookCondition" value="전자" class="ms-3" id="c3"><label for="c3">[[#{addBook.form.condition.ebook.label}]]</label>  
+				</div>
+			</div>
+			<div class="mb-3 mt-4 row">
+				<label class="col-sm-2 control-label">[[#{addBook.form.bookImage.label}]]</label>
+				<div class="col-sm-4">
+					<input type="file" name="bookImage" class="form-control" >
+				</div>				
+			</div>
+			<div class="mb-3 row">
+				<div class="col-sm-10 col-sm-offset-2">
+					<button type="submit" class="btn btn-primary">[[#{addBook.form.button.label}]]</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 푸터 -->
+	<th:block th:replace="~{/module/bottom.html}"></th:block>
+</div>
+</body>
+</html>

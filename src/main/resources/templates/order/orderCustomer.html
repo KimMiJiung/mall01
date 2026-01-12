@@ -1,0 +1,123 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>주문고객정보</title>
+	<th:block th:replace="~{/module/link.html}"></th:block>
+</head>
+<body>
+<div class="container py-4">
+	<!-- 헤더 -->
+	<th:block th:replace="~{/module/top.html}"></th:block>
+	<!-- 본문 상단 -->
+	<div class="p-5 mb-4 bg-success-subtle rounded-3">
+		<div class="container-fluid py-5">
+			<h1 class="display-5 fw-bold">주문고객정보</h1>
+			<p class="col-md-8">BookMarket</p>
+		</div>
+	</div>
+	<!-- 본문 내용 -->
+	<div class="row align-items-md-stretch">
+		<form th:object="${customer}" th:action="@{/order/orderCustomer}" method="post">
+			<legend class="mb-4">주문고객정보</legend>
+			<div class="mb-3 row">
+				<div class="col-sm-2"></div>
+				<div class="col-sm-10">
+					<span class="s-a">고객 ID는 변경할 수 없습니다. </span>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">고객 ID</label>
+				<div class="col-sm-3">
+					<input type="text" name="customerId" class="form-control" th:field="*{customerId}" readonly>
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{customerId}"></p>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">고객 이름</label>
+				<div class="col-sm-3">
+					<input type="text" name="name" class="form-control"  th:field="*{name}">
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{name}"></p>
+				</div>				
+			</div>
+
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">전화번호</label>
+				<div class="col-sm-3">
+					<input type="text" name="phone" class="form-control" th:field="*{phone}">
+				</div>
+				<div class="col-sm-7">
+					<p class="text-danger" th:errors="*{phone}"></p>
+				</div>				
+			</div>
+			<!-- 주소 부분 -->			
+			<div class="mb-3 row" >
+				<label class="col-sm-2 control-label">국가명</label>
+				<div class="col-sm-3">
+					<!--<input type="text" name="address.country" class="form-control" th:field="*{address.country}">-->
+					<select name="address.country" class="form-control" th:field="*{address.country}">
+						<option value="한국">한국</option>
+						<option value="일본">일본</option>
+						<option value="중국">중국</option>
+						<option value="미국">미국</option>
+						<option value="영국">영국</option>
+						<option value="프랑스">프랑스</option>
+					</select>
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{address.country}"></p>
+				</div>					
+			</div>
+			<div class="mb-3 row">
+				<div class="col-sm-2"></div>
+				<div class="col-sm-10">
+					<span class="s-a">주소 검색 버튼을 클릭하여 기본정보를 선택해주세요. </span>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">우편번호</label>
+				<div class="col-sm-3">
+					<input type="text" name="address.zipcode" class="form-control" id="zipcode" th:field="*{address.zipcode}" readonly>					
+				</div>
+				<div class="col-sm-2">
+					<a th:href="|javascript:searchAddress()|" class="btn btn-success" role="button">주소검색</a>
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{address.zipcode}"></p>
+				</div>					
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">기본주소</label>
+				<div class="col-sm-5">
+					<input type="text" name="address.basicAddress" class="form-control" id="basicAddress" th:field="*{address.basicAddress}" readonly>
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{address.basicAddress}"></p>
+				</div>					
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 control-label">상세주소</label>
+				<div class="col-sm-5">
+					<input type="text" name="address.detailAddress" class="form-control" th:field="*{address.detailAddress}">
+				</div>
+				<div class="col-sm-4">
+					<p class="text-danger" th:errors="*{address.detailAddress}"></p>
+				</div>					
+			</div>			
+
+			<div class="mb-3 row">
+				<div class="col-sm-10 col-sm-offset-2">
+					<input type="submit" class="btn btn-primary" value="주문고객확인"/>
+					<a th:href="@{/books}" class="btn btn-secondary ms-2"> 도서목록</a>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 푸터 -->
+	<th:block th:replace="~{/module/bottom.html}"></th:block>
+</div>
+</body>
+</html>

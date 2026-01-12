@@ -1,0 +1,76 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>주문목록</title>
+	<th:block th:replace="~{/module/link.html}"></th:block>
+</head>
+<body>
+<div class="container py-4">
+	<!-- 헤더 -->
+	<th:block th:replace="~{/module/top.html}"></th:block>
+	<!-- 본문 상단 -->
+	<div class="p-5 mb-4 bg-secondary-subtle rounded-3">
+		<div class="container-fluid py-5">
+			<h1 class="display-5 fw-bold">주문 상세 내역</h1>
+			<p class="col-md-8">BookMarket</p>
+		</div>
+	</div>
+	<!-- 본문 내용 : 주문 내역에 따른 주문 상세 내역 -->
+	<div class="row align-items-md-stretch">
+		<div class="col-md-12 fw-bold fs-5 mb-3 text-end">
+			주문 수량 : [[${#lists.size(orderItemList)}]] 종 / [[${#aggregates.sum(orderItemList.![quantity])}]] 개
+		</div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>선택</th>
+					<th colspan="2">주문 상품</th>
+					<th>저자</th>
+					<th>출판사</th>
+					<th class="text-end">가격</th>					
+					<th class="text-end">주문수량</th>
+					<th class="text-end">소계</th>
+				</tr>
+			</thead>
+			<tbody>
+			<div th:each="book : ${bookList}">
+				<tr>
+					<td><input type="checkbox" name="chkOrderDetail" id="chkOrderDetail"></td>
+					<td>
+						<a th:href="@{|/books/book/${book.bookId}|}"><img th:src="|/BookMarket/images/${book.fileName}|" width="40"></a>
+					</td>
+					<td> 
+						<a th:href="@{|/books/book/${book.bookId}|}" class="a-detail">[[${book.title}]]</a>
+					</td>
+					<td>[[${book.author}]]</td>
+					<td>[[${book.publisher}]]</td>
+					<td td class="text-end">[[${#numbers.formatInteger(book.price,3, 'COMMA')}]]</td>
+					<div th:each="item : ${orderItemList}" th:if="${book.bookId == item.bookId}">
+						<td class="text-end">[[${item.quantity}]]</td>
+						<td class="text-end">[[${#numbers.formatInteger(item.allPrice,3,'COMMA')}]]</td>
+					</div>
+				</tr>
+			</div>	
+			</tbody>
+		</table>
+
+		<div class="col-md-12 fw-bold fs-5 mb-3 text-end">
+			총주문 금액 :  [[${#numbers.formatInteger(#aggregates.sum(orderItemList.![allPrice]), 3, 'COMMA')} ]]  원
+						
+		</div>		
+		
+		<div class="container col-md-12 py-3">
+			<a th:href="@{|/order/member/${customerId}|}"  class="btn btn-secondary">주문목록</a>
+			<span sec:authorize="hasRole('ROLE_ADMIN')">
+				<input  type="submit" value="주문수정" class="btn btn-warning ms-3" >
+				<a href="#" class="btn btn-dnager ms-2">주문삭제</a>
+			</span>
+		</div>
+		
+	</div>
+	
+	<!-- 푸터 -->
+	<th:block th:replace="~{/module/bottom.html}"></th:block>
+</div>
+</body>
+</html>

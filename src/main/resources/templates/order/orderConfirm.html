@@ -1,0 +1,87 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>주문최종확인</title>
+	<th:block th:replace="~{/module/link.html}"></th:block>
+</head>
+<body>
+<div class="container py-4">
+	<!-- 헤더 -->
+	<th:block th:replace="~{/module/top.html}"></th:block>
+	<!-- 본문 상단 -->
+	<div class="p-5 mb-4 bg-danger-subtle rounded-3">
+		<div class="container-fluid py-5">
+			<h1 class="display-5 fw-bold">주문최종확인</h1>
+			<p class="col-md-8">BookMarket</p>
+		</div>
+	</div>
+	<!-- 본문 내용 -->
+	<div class="row align-items-md-stretch">
+		<form th:object="${order}" th:action="@{/order/orderConfirm}" method="post">
+			<div class="row p-2 mb-3 d-bg">
+				<div class="text-center pt-3"><h2 class="fw-bold">영 수 증</h2></div>
+				<div class="row text-left p-4">
+					<div class="col-md-6 py-3">
+						<p class="fw-bold">배송 주소</p>
+						<p><span>수취인 이름</span> : <span>[[${order.shipping.name}]]</span></p>
+						<p><span>수취인 주소</span> : <span>[[|${order.shipping.address.basicAddress} ${order.shipping.address.detailAddress}|]]</span></p>
+					</div>
+					<div class="col-md-6 text-right py-3">
+						<p><span>배송일</span> : <span>[[${order.shipping.date}]]</span></p>
+					</div>			
+				</div>
+				<div class="row text-left p-4">
+					<div class="col-md-6">
+						<p class="fw-bold">청구 주소</p>
+						<p><span>고객 이름</span> : <span>[[${order.customer.name}]]</span></p>
+						<p><span>고객 주소</span> : <span>[[|${order.customer.address.basicAddress} ${order.customer.address.detailAddress}|]]</span></p>
+						<p><span>전화번호</span> : <span>[[${order.customer.phone}]]</span></p>										
+					</div>
+				</div>				
+			</div>
+
+			<div class="row py-2">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th colspan="2" width="40%">도서</th>
+							<th widht="26%">저자</th>
+							<th widht="12%">출판사</th>
+							<th widht="8%" class="text-end">가격</th>
+							<th widht="6%" class="text-end">수량</th>
+							<th widht="8%" class="text-end">소계</th>
+						</tr>
+					</thead>
+					<tbody>
+					<div th:each="book : ${bookList}">
+						<tr>
+							<td><a th:href="@{|/books/book/${book.bookId}|}" class="a-t"><img th:src="|/BookMarket/images/${book.fileName}|" width="40"></a></td>
+							<td><a th:href="@{|/books/book/${book.bookId}|}" class="a-t">[[${book.title}]]</a></td>
+							<td>[[${book.author}]]</td>
+							<td>[[${book.publisher}]]</td>
+							<td class="text-end">[[${#numbers.formatInteger(book.price,3, 'COMMA')}]]</td>
+							<span th:each="orderItem : ${order.orderItems}" th:if="${book.bookId == orderItem.value.bookId}">
+								<td class="text-end">[[${orderItem.value.quantity}]]</td>
+								<td class="text-end">[[${#numbers.formatInteger(orderItem.value.allPrice, 3, 'COMMA')}]]</td>
+							</span>
+						</tr>
+					</div>
+					</tbody>
+					<tfoot class="tfoot">
+						<td colspan="5">총계</td>
+						<td colspan="2" class="text-end text-danger t-t">[[${#numbers.formatInteger(order.orderTotalPrice,3,'COMMA')}]]</td>
+					</tfoot>
+				</table>
+			</div>
+			<div class="container col-md-12 py-5">
+				<input type="submit" value="주문완료" class="btn btn-success">
+				<a th:href="@{/order/orderCancel}" class="btn btn-danger ms-3">주문취소</a>
+			</div>
+		</form>
+	</div>
+	
+	<!-- 푸터 -->
+	<th:block th:replace="~{/module/bottom.html}"></th:block>
+</div>
+</body>
+</html>

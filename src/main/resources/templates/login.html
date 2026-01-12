@@ -1,0 +1,45 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>로그인</title>
+	<th:block th:replace="~{/module/link.html}"></th:block>		
+</head>
+<body>
+<div class="container py-4">
+	<!-- 헤더 -->
+	<th:block th:replace="~{/module/top.html}"></th:block>
+	<!-- 본문 상단 -->
+	<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+		<div class="container-fluid py-5">
+			<h1 class="display-5 fw-bold">LOGIN</h1>
+			<p class="col-md-8">BookMarket</p>
+		</div>
+	</div>
+	<!-- 본문 내용 -->
+	<div class="row align-items-md-stretch text-center">
+		<div class="container col-md-5">
+			<div class="text-center mb-5">
+				<h3 class="fw-bold">BookMarket Login</h3>
+			</div>
+			<!--  로그인 실패 처리 -->
+			<div th:if="${error}" class="alert alert-danger mb-5">
+				<div>Username 또는 Password가 올바르지 않습니다.</div>
+			</div>
+			<form th:action="@{/login}" method="post" class="form-signin">
+				<div class="mb-5 row">
+					<input type="text" name="username" class="form-control form-control-lg" required autofocus>
+				</div>
+				<div class="mb-5 row">
+					<input type="password" name="password" class="form-control form-control-lg" required >
+				</div>
+				<div class="mb-5 row">
+					<input type="submit" value="로그인" class="btn btn-lg btn-success btn-block">
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- 푸터 -->
+	<th:block th:replace="~{/module/bottom.html}"></th:block>
+</div>
+</body>
+</html>

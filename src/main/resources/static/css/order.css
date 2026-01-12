@@ -1,0 +1,47 @@
+/* orderCustomer.html, orderShipping.html */
+.s-a {
+	font-size: 0.9em;
+	color: blue;
+}
+
+/* orderConfirm.html */
+.a-t {
+	color: #000;
+	text-decoration: none;
+}
+.a-t:hover {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.t-t {
+	font-size: 1.2em;
+	font-weight: bold;
+	
+}
+.d-bg {
+	background-color: #eee;
+}
+
+/* orderList.html */
+.a-detail {
+	color: #000;
+	text-decoration: none;
+}
+.a-detail:hover {
+	text-decoration: underline;
+	font-weight: bold;
+}
+.s-d {
+	font-size: 0.9em;
+	color: blue;
+}
+
+/* orderList.html */
+.o-date {
+	display: inline-block;
+	width: 140px;
+}
+
+
+

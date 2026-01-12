@@ -1,0 +1,170 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>BookMarket</title>
+	<!-- css, js 링크 -->
+	<th:block th:replace="~{/module/link.html}"></th:block>
+</head>
+<body>
+<div class="container py-4">
+	<!-- 헤더 -->
+	<th:block th:replace="~{/module/top.html}"></th:block>
+	
+	<!-- 본문 상단 -->
+	<!-- 이미지로 대체 -->
+	<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+		<div class="container-fluid py-5">
+			<h1 class="display-5 fw-bold"><span th:text="#{books.form.Heder.label}"></span></h1>
+			<p class="col-md-8">BookMarket</p>
+		</div>
+	</div>
+	
+	<!-- caroucel : bxSlider - 최신 상품  (category별로 최신상품 3개씩)  -->
+	<!-- 연습 : 최신상품 20개를 출력-->	
+	<div class="row align-items-md-stretch text-center mt-5">
+		<div class="col-md-4 text-start b-mark1 d-flex align-items-center">			
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bookmark-heart me-2" viewBox="0 0 16 16">
+			  <path fill-rules="evenodd" d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
+			  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+			</svg>
+			최신상품
+		</div>
+		<div class="slider1">
+			<div th:each="s : ${sliderList1}">
+				<a th:href="@{|/books/book/${s.bookId}|}"><img th:src="|/BookMarket/images/${s.fileName}|"></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="row align-items-md-stretch text-center mt-5">
+		<div class="col-md-4 text-start b-mark1 d-flex align-items-center">	
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bookmarks me-2" viewBox="0 0 16 16">
+			  <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z"/>
+			  <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1"/>
+			</svg>
+			전체상품
+		</div>
+		<div class="d-slick">
+			<div class="slider2">
+				<div style="width:260px; height:460px;" th:each="s : ${sliderList4}">
+					<a th:href="@{|/books/book/${s.bookId}|}"><img th:src="|/BookMarket/images/${s.fileName}|"></a>
+				</div>
+			</div>			
+		</div>		
+	</div>
+		
+	<!-- 다국어 처리 -->
+	<div class="text-end a-lang">
+		<a href="?lang=ko" class="a-lang">KOREAN</a> |
+		<a href="?lang=en" class="a-lang">ENGLISH</a>
+	</div>
+	
+
+	
+	<!-- 본문 내용 -->
+	<div class="row align-items-md-stretch text-center">
+		<!-- col-md-12 : 기본 너비 -->
+		<div class="col-md-3" th:each="book : ${bookList}">
+			<a th:href="@{|/books/book/${book.bookId}|}" class="nav-link"><img th:src="|/BookMarket/images/${book.fileName}|" class="mb-2 mt-3 img-1"></a>
+			<a th:href="@{|/books/book/${book.bookId}|}" class="nav-link"><h5 th:text="${book.title}" class="fw-bold mt-2 t-h"></h5></a>
+			<a th:href="@{|/books/state?state=author&keyword=${book.author}|}" class="nav-link"><p th:text="${book.author}"></p></a>
+			<p>
+				<a th:href="@{|/books/state?state=publisher&keyword=${book.publisher}|}" class="nav-link one-line">
+					<span th:text="${book.publisher}"></span></a> | 
+				<span th:text="${book.releaseDate}"></span>
+			</p>
+			<p th:text="${book.description}" class="d-h"></p>
+			<a th:href="@{|/books/state?state=category&keyword=${book.category}|}" class="nav-link one-line"><p th:text="${book.category}"></p></a> | 
+			<a th:href="@{|/books/state?state=bookCondition&keyword=${book.bookCondition}|}" class="nav-link one-line"><p th:text="${book.bookCondition}"></p></a>
+			<p th:text="|${#numbers.formatInteger(book.price, 3, 'COMMA')}원|" class="text-danger fw-bold"></p>
+			<p>
+				<!-- ★★★★★ -->
+				<!-- 1번 : @PathVariable로 전달할 때 -->
+				<a th:href="@{|/books/book/${book.bookId}|}" class="btn btn-primary" role="button"><span th:text="#{books.form.detail.label}"></span> &raquo;</a>
+				<!-- 2번 : @RequestParam으로 전달할 때 -->
+				<!--<a th:href="@{|/books/book?bookId=${book.bookId}|}" class="btn btn-primary" role="button">상세정보 &raquo;</a>-->
+			</p>
+		</div>
+	</div>
+	
+	<!-- 페이지 정보 -->
+	<div class="container d-flex flex-wrap justify-content-center">
+		<span class="d-flex align-items-center text-body-emphasis mb-3 mb-lg-0 me-lg-auto">전체 [[${totalItems}]]건</span>
+		<span class="align-self-center">[[${pageNum}]]page / [[${totalPages}]]page</span>
+	</div>
+	
+	
+	<!-- 페이징 처리 -->
+	<div th:if="${totalPages > 1}">
+		<ul class="pagination justify-content-center">
+			
+			<!-- 처음 페이지 -->
+			<li th:classappend="${pageNum <= 1} ? 'disabled'" class="page-item">
+				<a th:href="@{|/books/paging?pageNum=1&state=${state}&keyword=${keyword}|}"  class="page-link" title="처음">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+					  <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+					</svg>
+				</a>
+			</li>
+						
+			<!-- 이전 페이지 -->
+			<li th:classappend="${pageNum <= 1} ? 'disabled'" class="page-item">
+				<a th:href="@{|/books/paging?pageNum=${pageNum-1}&state=${state}&keyword=${keyword}|}"  class="page-link" title="이전">
+					<!-- 왼쪽 화살표 -->
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+					  <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"/>
+					</svg>
+				</a>
+			</li>			
+	
+			<!-- 페이지 번호 -->			
+			<li th:each="i : ${#numbers.sequence(startPage, endPage)}"
+				th:if="${i <= totalPages}" 
+				th:classappend="${i == pageNum} ? 'active'" class="page-item">
+				<a th:text="${i}" th:if="${i != pageNum}" th:href="@{|/books/paging?pageNum=${i}&state=${state}&keyword=${keyword}|}" th:data-page="${i+1}" class="page-link"></a>
+				<span th:text="${i}" th:if="${i == pageNum}"  th:data-page="${i+1}" class="page-link"></span>
+			</li>
+
+			<!-- 다음 페이지 -->			
+			<li th:classappend="${pageNum >= totalPages} ? 'disabled'" class="page-item">
+				<a th:href="@{|/books/paging?pageNum=${pageNum+1}&state=${state}&keyword=${keyword}|}" class="page-link" title="다음">
+					<!-- 오른쪽 화살표 -->					
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+					  <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>
+					</svg>
+				</a>
+			</li>
+			
+			<!-- 끝 페이지 -->
+			<li th:classappend="${pageNum >= totalPages} ? 'disabled'" class="page-item">
+				<a  th:href="@{|/books/paging?pageNum=${totalPages}&state=${state}&keyword=${keyword}|}"  class="page-link" title="끝">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+					  <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+					</svg>
+				</a>
+			</li>
+		</ul>
+	</div>	
+		
+	<!-- caroucel(slider) : slick - 추천상품: 건강, 요리, 사랑 키워드 별로 제목 또는 내용에서 조회해서 5건씩 -->
+	<div class="row align-items-md-stretch text-center mt-5">
+		<div class="col-md-4 text-start b-mark1 d-flex align-items-center">	
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bookmark-star me-2" viewBox="0 0 16 16">
+			  <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.18.18 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.18.18 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.18.18 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.18.18 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.18.18 0 0 0 .134-.098z"/>
+			  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+			</svg>
+			추천상품
+		</div>
+		<div class="d-slick">
+			<div class="slider2">
+				<div style="width:260px; height:460px;" th:each="s : ${sliderList2}">
+					<a th:href="@{|/books/book/${s.bookId}|}"><img th:src="|/BookMarket/images/${s.fileName}|"></a>
+				</div>
+			</div>			
+		</div>		
+	</div>	
+	<!-- 푸터 -->
+	<th:block th:replace="~{/module/bottom.html}"></th:block>
+</div>
+</body>
+</html>

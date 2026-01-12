@@ -1,0 +1,89 @@
+<script th:src="@{/js/top.js}"></script>
+<!-- 헤더 -->
+<header class="pb-3 mb-4 border-bottom">
+	<div class="container d-flex flex-wrap justify-content-center">
+		<!-- 메뉴로 사용 -->
+		<div class="d-flex align-items-center text-body-emphasis text-decoration-none mb-3 mb-lg-0 me-lg-auto">
+			<a href="#" title="메뉴"><img th:src="@{/icons/menu1.png}" id="menu-img"></a>
+			<a th:href="@{/books}" class="a-logo"><span class="fs-4 mx-3">BookMarket</span></a>
+		</div>
+		
+		<!-- 검색 : 제목, 내용, 저자, 출판사 -->
+		<nav class="align-self-center navbar mt-3">
+	   		<div class="container-fluid">
+				<a class="navbar-brand"></a>
+	    		<form th:action="@{/books/search}" method="post" class="d-flex" role="search">
+	      			<input name="keyword" class="form-control me-2" type="search"  placeholder="Search" aria-label="Search"/>
+	      			<button class="btn btn-outline-primary" type="submit">
+						<!-- 검색 아이콘 -->
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search-heart-fill" viewBox="0 0 16 16">
+						  <path d="M6.5 13a6.47 6.47 0 0 0 3.845-1.258h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1A6.47 6.47 0 0 0 13 6.5 6.5 6.5 0 0 0 6.5 0a6.5 6.5 0 1 0 0 13m0-8.518c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018"/>
+						</svg>
+					</button>
+	    		</form>
+	  		</div>
+		</nav>	
+		
+		<!-- 도서상태(bookCondition)별 검색 -->
+		<select name="s-bookCondition" id="s-bookCondition"  class="align-self-center nav-link me-3 ms-2">
+			<option>도서상태</option>
+			<option value="신규" th:selected="${keyword == '신규'}">신규</option>
+			<option value="중고" th:selected="${keyword == '중고'}">중고</option>
+			<option value="전자" th:selected="${keyword == '전자'}">전자</option>		
+		</select>
+				
+		<!-- 도서 분류(category)별 검색 -->
+		<select name="s-category" id="s-category"  class="align-self-center nav-link me-3 ms-2">
+			<option>도서분류</option>
+			<option value="시/에세이" th:selected="${keyword == '시/에세이'}">시/에세이</option>
+			<option value="소설" th:selected="${keyword == '소설'}">소설</option>
+			<option value="인문" th:selected="${keyword == '인문'}">인문</option>
+			<option value="가정/육아" th:selected="${keyword == '가정/육아'}">가정/육아</option>			
+			<option value="요리" th:selected="${keyword == '요리'}">요리</option>
+			<option value="건강" th:selected="${keyword == '건강'}">건강</option>
+			<option value="외국어" th:selected="${keyword == '외국어'}">외국어</option>
+			<option value="경제/경영" th:selected="${keyword == '경제/경영'}">경제/경영</option>
+			<option value="자기계발" th:selected="${keyword == '자기계발'}">자기계발</option>
+			<option value="컴퓨터/IT" th:selected="${keyword == '컴퓨터/IT'}">컴퓨터/IT</option>
+		</select>
+		
+		<!-- 공지사항, QNA, FAQ(자주 묻는 질문) -->
+		<select name="s-board" id="s-board" class="align-self-center nav-link me-3 ms-2">
+			<option>회원알림</option>
+			<option value="공지사항">공지사항</option>
+			<option value="QNA">QNA</option>
+			<option value="FAQ">FAQ</option>		
+		</select>
+		
+		<!-- 관리자용 메뉴 -->
+		<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/books/admin/add}" class="nav-link align-self-center mx-2">도서 등록</a>
+		
+		<!-- 회원가입, 로그인 : 익명사태(로그인을 하지 않은 상태) -->
+		<a sec:authorize="isAnonymous()" th:href="@{/member/add}" class="nav-link align-self-center mx-2">회원가입</a>
+		<a sec:authorize="isAnonymous()" th:href="@{/login}" class="nav-link align-self-center mx-2">
+			<img th:src="@{/icons/login.png}"></a>
+		<!-- 아이디 확인, 로그아웃 : 인증 상태(로그인을 한 상태) -->
+		<a sec:authorize="isAuthenticated()" th:href="@{|/member/update/${#authentication.getPrincipal().getUsername()}|}" class="nav-link align-self-center ms-2" title="회원정보">
+			<span class="a-id">[[${#authentication.getPrincipal().getUsername()}]]</span>님
+		</a>
+		<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-link align-self-center ms-2">
+			<img th:src="@{/icons/logout.png}"></a>
+		</a>
+		
+		<!-- 장바구니, 주문관리 -->
+		<a sec:authorize="isAnonymous()" th:href="|javascript:alert('로그인을 해주세요!')|" class="nav-link align-self-center ms-4" title="장바구니">
+			<img th:src="@{/icons/cart1.png}">
+		</a>
+		<a sec:authorize="isAuthenticated()" th:href="@{|/cart/member/${#authentication.getPrincipal().getUsername()}|}" class="nav-link align-self-center ms-4" title="장바구니" >
+			<img th:src="@{/icons/cart2.png}">
+		</a>
+		
+		<!-- 주문관리 -->
+		<a sec:authorize="isAnonymous()" th:href="|javascript:alert('로그인을 해주세요!')|" class="nav-link align-self-center ms-4" title="주문관리">
+			<img th:src="@{/icons/order1.png}">
+		</a>
+		<a sec:authorize="isAuthenticated()" th:href="@{|/order/member/${#authentication.getPrincipal().getUsername()}|}" class="nav-link align-self-center ms-4" title="주문관리" >
+			<img th:src="@{/icons/order2.png}">
+		</a>		
+	</div>
+</header>

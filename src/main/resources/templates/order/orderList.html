@@ -1,0 +1,131 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>주문목록</title>
+	<th:block th:replace="~{/module/link.html}"></th:block>
+</head>
+<body>
+<div class="container py-4">
+	<!-- 헤더 -->
+	<th:block th:replace="~{/module/top.html}"></th:block>
+	<!-- 본문 상단 -->
+	<div class="p-5 mb-4 bg-secondary-subtle rounded-3">
+		<div class="container-fluid py-5">
+			<h1 class="display-5 fw-bold">주문목록</h1>
+			<p class="col-md-8">BookMarket</p>
+		</div>
+	</div>
+	<!-- 본문 내용 -->
+	<!-- 주문 내역 : 상품명 -->
+	<div class="row align-items-md-stretch">
+		<div class="col-md-6 text-start">
+			<form method="post" th:action="@{|/order/search/${#authentication.getPrincipal().getUsername()}|}" class="d-flex align-items-center">			
+				주문 검색: <input type="date" name="searchDate1"  class="form-control ms-3 o-date"> ~ 
+				<input type="date" name="searchDate2" class="form-control ms-3 o-date">
+				<button type="submit" class="btn btn-warning ms-3">검색</button>
+			</form>
+		</div>
+		<div class="col-md-6 fw-bold fs-5 mb-2 text-end">
+			누적 주문 금액 :[[${#numbers.formatInteger(#aggregates.sum(orderList.![orderTotalPrice]), 3, 'COMMA')} ]] 원
+		</div>
+		<div class="col-md-12">
+			<span class="s-d">자세한 주문사항은 주문내역을 눌러주세요.</span>
+		</div>
+		<table class="table table-hover mt-2">
+			<tr>
+				<th width="4%">선택</th>
+				<th width="6%">주문 ID</th>
+				<th width="30%">주문 내역</th>
+				<th width="40%">배송지</th>
+				<th width="10%" class="text-end">배송일</th>
+				<th width="10%" class="text-end">주문총액</th>
+			</tr>
+			<div th:each="order, orderStat : ${orderList}">
+				<tr>
+					<td class="text-center"><input type="checkbox" name="chkOrder" class="chkOrder"></td>
+					<td class="text-center">[[${order.orderId}]]</td>
+					<div th:each="title, titleStat : ${bookTitleList}" th:if="${orderStat.index == titleStat.index}">
+						<td>
+							<a th:if="${#maps.size(order.orderItems.value) > 1}" th:href="@{|/order/detail/${order.orderId}|}" class="a-detail">
+								[[${title}]] 외 [[${#maps.size(order.orderItems.value) -1}]]건
+							</a>
+							<a th:if="${#maps.size(order.orderItems.value) == 1}" th:href="@{|/order/detail/${order.orderId}|}" class="a-detail">
+								[[${title}]] (1건)
+							</a>							
+						</td>
+					</div>
+					<td>[[|${order.shipping.address.basicAddress} ${order.shipping.address.detailAddress}|]]</td>
+					<td class="text-end">[[${order.shipping.date}]]</td>
+					<td class="text-end">[[${#numbers.formatInteger(order.orderTotalPrice, 3, 'COMMA')}]]</td>
+				</tr>
+			</div>
+		</table>
+	
+		<div sec:authorize="hasRole('ROLE_ADMIN')"  class="col-md-12 text-end">
+			<input type="submit" class="btn btn-warning" value="주문수정">
+			<a href="#" class="btn btn-danger ms-3">주문 삭제</a>
+		</div>
+	</div>
+
+	<!-- 페이지 정보 -->
+	<div class="container d-flex flex-wrap justify-content-center">
+		<span class="d-flex align-items-center text-body-emphasis mb-3 mb-lg-0 me-lg-auto">전체 [[${totalItems}]]건</span>
+		<span class="align-self-center">[[${pageNum}]]page / [[${totalPages}]]page</span>
+	</div>
+	
+	<!-- 페이징 처리 -->
+	<div th:if="${totalPages > 1}">
+		<ul class="pagination justify-content-center">
+			
+			<!-- 처음 페이지 -->
+			<li th:classappend="${pageNum <= 1} ? 'disabled'" class="page-item">
+				<a th:href="@{|/order/member/${#authentication.getPrincipal().getUsername()}?pageNum=1|}"  class="page-link" title="처음">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+					  <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+					</svg>
+				</a>
+			</li>
+					
+			<!-- 이전 페이지 -->			
+			<li th:classappend="${pageNum <= 1} ? 'disabled'" class="page-item">
+				<a th:href="@{|/order/member/${#authentication.getPrincipal().getUsername()}?pageNum=${pageNum-1}|}"  class="page-link" title="이전">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+					  <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"/>
+					</svg>
+				</a>
+			</li>			
+			
+			<!-- 페이지 번호 -->					
+			<li th:each="i : ${#numbers.sequence(startPage, endPage)}"
+				th:if="${i <= totalPages}" 
+				th:classappend="${i == pageNum} ? 'active'" class="page-item">
+				<a th:text="${i}" th:if="${i != pageNum}" th:href="@{|/order/member/${#authentication.getPrincipal().getUsername()}?pageNum=${i}|}"  class="page-link"></a>
+				<span th:text="${i}" th:if="${i == pageNum}"  class="page-link"></span>
+			</li>
+				
+			<!-- 다음 페이지 -->		
+			<li th:classappend="${pageNum >= totalPages} ? 'disabled'" class="page-item">
+				<a th:href="@{|/order/member/${#authentication.getPrincipal().getUsername()}?pageNum=${pageNum+1}|}" class="page-link" title="다음">				
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+					  <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>
+					</svg>
+				</a>
+			</li>
+			<!-- 끝 페이지 -->
+			<li th:classappend="${pageNum >= totalPages} ? 'disabled'" class="page-item">
+				<a  th:href="@{|/order/member/${#authentication.getPrincipal().getUsername()}?pageNum=${totalPages}|}"  class="page-link" title="끝">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+					  <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+					</svg>
+				</a>
+			</li>
+			
+		</ul>
+	</div>		
+	
+	
+	<!-- 푸터 -->
+	<th:block th:replace="~{/module/bottom.html}"></th:block>
+</div>
+</body>
+</html>
